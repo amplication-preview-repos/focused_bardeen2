@@ -1,0 +1,73 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserMeasurements {
+  armLength      Float?
+  bust           Float?
+  createdAt      DateTime                    @default(now())
+  fitPredictions FitPrediction[]
+  gender         EnumUserMeasurementsGender?
+  height         Float?
+  hips           Float?
+  id             String                      @id @default(cuid())
+  inseam         Float?
+  shoulderWidth  Float?
+  updatedAt      DateTime                    @updatedAt
+  waist          Float?
+  weight         Float?
+}
+
+model Garment {
+  brand          String?
+  category       EnumGarmentCategory?
+  createdAt      DateTime             @default(now())
+  elasticity     Boolean?
+  fabricType     String?
+  fitPredictions FitPrediction[]
+  fitType        String?
+  id             String               @id @default(cuid())
+  length         Float?
+  productId      String?
+  shoulder       Float?
+  size           String?
+  updatedAt      DateTime             @updatedAt
+  width          Float?
+}
+
+model FitPrediction {
+  createdAt         DateTime          @default(now())
+  fitRating         Int?
+  fitScore          String?
+  garment           Garment?          @relation(fields: [garmentId], references: [id])
+  garmentId         String?
+  id                String            @id @default(cuid())
+  recommendation    String?
+  updatedAt         DateTime          @updatedAt
+  userMeasurement   UserMeasurements? @relation(fields: [userMeasurementId], references: [id])
+  userMeasurementId String?
+}
+
+model AiModel {
+  accuracy  Float?
+  createdAt DateTime @default(now())
+  f1Score   Float?
+  id        String   @id @default(cuid())
+  modelName String?
+  precision Float?
+  recall    Float?
+  updatedAt DateTime @updatedAt
+}
+
+enum EnumUserMeasurementsGender {
+  Option1
+}
+
+enum EnumGarmentCategory {
+  Option1
+}
